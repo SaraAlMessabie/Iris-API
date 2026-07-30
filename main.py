@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 import joblib
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI()
 model = joblib.load("iris_model.pkl")
 @app.get("/")
@@ -14,3 +16,11 @@ class IrisInput(BaseModel):
 def predict(data:IrisInput):
    prediction = model.predict([data.features])
    return {"prediction": int(prediction[0])}
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    alow_methods=["*"],
+    allow_headers=["*"]
+)
